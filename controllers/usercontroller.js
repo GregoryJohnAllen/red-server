@@ -2,13 +2,8 @@ var express = require("express");
 var router = express.Router();
 var sequelize = require("../db");
 var User = sequelize.import("../models/user");
-<<<<<<< HEAD
 var bcrypt = require("bcryptjs");
 var jwt = require("jsonwebtoken");
-=======
-var jwt = require('jsonwebtoken')
-var bcrypt = require('bcryptjs')
->>>>>>> origin/Marina
 
 //Controller get, post, delete go below
 //the below get is a test
@@ -17,7 +12,6 @@ var bcrypt = require('bcryptjs')
 // });
 
 //example of user sign up with creating an entry
-<<<<<<< HEAD
 router.post("/usertest", function(req, res) {
   var testUser = req.body.user.username;
   var pass = req.body.user.password;
@@ -46,7 +40,6 @@ router.post("/usertest", function(req, res) {
   );
 });
 
-=======
 // router.post("/usertest", function(req, res) {
 //   var testUser = req.body.user.username;
 //   var pass = req.body.user.password;
@@ -132,5 +125,4 @@ router.post('/login', function (req, res) {
 //  ternary user ? res.json(user): res.send ("User not found in our database");
 
 
->>>>>>> origin/Marina
 module.exports = router;
