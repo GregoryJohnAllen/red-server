@@ -3,5 +3,7 @@ module.exports = function (sequelize, DataTypes) {
     username: DataTypes.STRING,
     password: DataTypes.STRING,
     phonenumber: DataTypes.INTEGER
+    //need to add upper limit for the integer so that a phone
+    //number can be inputted
   })
 }
