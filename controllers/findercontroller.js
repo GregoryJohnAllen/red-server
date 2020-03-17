@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 var sequelize = require("../db")
 var Finder = sequelize.import("../models/finder")
+var Seeker = sequelize.import("../models/seeker")
 
 //Controller get, post, delete go below
 //the below get is a test

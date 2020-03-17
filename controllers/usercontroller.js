@@ -12,76 +12,58 @@ var jwt = require("jsonwebtoken");
 // });
 
 //example of user sign up with creating an entry
-router.post("/usertest", function(req, res) {
-  var testUser = req.body.user.username;
-  var pass = req.body.user.password;
-  var phone = req.body.user.phonenumber;
-  
-  //need to use bcrypt.compare() for signin 
-
-  User.create({
-    username: testUser,
-    password: bcrypt.hashSync(pass, 10),
-    phonenumber: phone
-  }).then(
-    function createSuccess(testUser) {
-      var token = jwt.sign({ id: testUser.id }, process.env.JWT_SECRET, {
-        expiresIn: 60 * 60 * 24
-      });
-      res.json({
-        username: testUser,
-        message: "user created",
-        sessionToken: token
-      });
-    },
-    function createError(err) {
-      res.json(500, err.message);
-    }
-  );
-});
-
 // router.post("/usertest", function(req, res) {
 //   var testUser = req.body.user.username;
 //   var pass = req.body.user.password;
 //   var phone = req.body.user.phonenumber;
+  
+//   //need to use bcrypt.compare() for signin 
 
 //   User.create({
 //     username: testUser,
-//     password: pass,
+//     password: bcrypt.hashSync(pass, 10),
 //     phonenumber: phone
-//   }).then(function createSuccess(user) {
-//     res.json({
-//       username: testUser,
-//       password: pass,
-//       phonenumber: phone
+//   }).then(
+//     function createSuccess(testUser) {
+//       var token = jwt.sign({ id: testUser.id }, process.env.JWT_SECRET, {
+//         expiresIn: 60 * 60 * 24
+//       });
+//       res.json({
+//         username: testUser,
+//         message: "user created",
+//         sessionToken: token
+//       });
 //     },
-//     function createError(err){
-//       res.send(500, err.message)
-//     });
-//   });
+//     function createError(err) {
+//       res.json(500, err.message);
+//     }
+//   );
 // });
 
 //create a user endpoint
 router.post('/createuser', function (req, res) {
-  // var userName = 'fake.com'
-  // var password = 'ThisIsPassword'
-  // going deeper into the object by using dot notation
-  var userName = req.body.user.username
+  var fname = req.body.user.fname
+  var lname = req.body.user.lname
   var password = req.body.user.password
   var phone = req.body.user.phone
   var email = req.body.user.email
 
   User.create({ //this is creating a save in the database
-      username: userName,
-      passwordhash: bcrypt.hashSync(password, 10)
+      fname: fname,
+      lname: lname,
+      email: email,
+      password: bcrypt.hashSync(password, 10),
+      phone: phone
   }).then(
       //res.send('user was created!!!'))
-      function createSuccess(user) {
-          var token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: 60 * 60 * 24 })
+      function createSuccess(email) {
+          var token = jwt.sign({ id: email.id }, process.env.JWT_SECRET, { expiresIn: 60 * 60 * 24 })
           //process.env.JWT_SECRET this is going to allow variables for your server
           res.json({
-              user: user,
+              user: email,
               message: 'created',
+              firstName: fname,
+              lastName: lname,
               sessionToken: token
           })
       }, function createError(err) {
@@ -92,11 +74,11 @@ router.post('/createuser', function (req, res) {
 //logging in a user
 
 router.post('/login', function (req, res) {
-  let user = req.body.user.username
+  let user = req.body.user.email
   let password = req.body.user.password
 
   User.findOne({
-      where: { username: user }
+      where: { email: user }
   }).then(user => {
       if (user) {
           comparePasswords(user);
@@ -104,10 +86,12 @@ router.post('/login', function (req, res) {
           res.send("User not found in our database");
       }
       function comparePasswords(user) {
-          bcrypt.compare(password, user.passwordhash, function matches(err, matches) {
+          bcrypt.compare(password, user.password, function matches(err, matches) {
               matches ? generateToken(user) : res.send("Incorrect password")
           })
       }
+      //may need to change user.password to user.passwordhash, not sure
+      //which to put here, match code with Create in Sign Up
       function generateToken(user) {
           var token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: 60 * 60 * 24 })
           //process.env.JWT_SECRET this is going to allow variables for your server

@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 var sequelize = require("../db")
 var Seeker = sequelize.import("../models/seeker")
+var Finder = sequelize.import ("../models/finder")
 var jwt = require('jsonwebtoken')
 var bcrypt = require('bcryptjs')
 
