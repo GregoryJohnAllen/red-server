@@ -62,8 +62,8 @@ router.post('/createuser', function (req, res) {
           res.json({
               user: email,
               message: 'created',
-              firstName: fname,
-              lastName: lname,
+              fname: fname,
+              lname: lname,
               sessionToken: token
           })
       }, function createError(err) {

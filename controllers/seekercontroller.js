@@ -8,44 +8,64 @@ var bcrypt = require('bcryptjs')
 
 //Controller get, post, delete go below
 //the below get is a test
-// router.get("/", function(req, res) {
-//   res.send("seeker controller works!");
-// });
-
-//logging in a user that is a seeker
-
-router.post('/', function (req, res) {
-  let userSeeker = req.body.user.username
-  let password = req.body.user.password
-
-  User.findOne({
-      where: { usernameSeeker: userSeeker }
-  }).then(user => {
-      if (user) {
-          comparePasswords(user);
-      } else {
-          res.send("User not found in our database!");
-      }
-      function comparePasswords(user) {
-          bcrypt.compare(password, user.passwordhash, function matches(err, matches) {
-              matches ? generateToken(user) : res.send("Incorrect password")
-          })
-      }
-      function generateToken(user) {
-          var token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: 60 * 60 * 24 })
-          //process.env.JWT_SECRET this is going to allow variables for your server
-          res.json({
-              user: user,
-              message: 'created',
-              sessionToken: token
-          })
-      }
-
-  }
-  );
+router.get("/", function(req, res) {
+  res.send("seeker controller works!");
 });
 
-//  ternary user ? res.json(user): res.send ("User not found in our database");
 
+//  ternary user ? res.json(user): res.send ("User not found in our database");
+router.delete("/delete/:id", function (req, res) {
+    var primaryKey = req.params.id
+    var userid = req.user.id
+  
+    Seeker.destroy({
+        where: { id: primaryKey, owner: userid }
+    }).then(data => {
+        return res.json(data)
+    }),
+        err => res.send(500, err.message)
+  })
+  
+  //Updating record for the individual
+  //Endpoint: /update/[number here]
+  //Actual URL: localhost:3000/authtest/update/10
+  
+  router.put("/update/:id", function (req, res) {
+    var userid = req.user.id
+    var primaryKey = req.params.id
+    var preDiskTraits = req.body.Seeker.preDiskTraits
+    var prevJobs = req.body.Seeker.prevJobs
+    var prefSkills = req.body.Seeker.prefSkills
+    var companies = req.body.Seeker.companies
+
+    // insert model variables
+  
+    Seeker.update({
+        preDiskTraits: preDiskTraits,
+        prevJobs: prevJobs,
+        prefSkills: prefSkills,
+        companies: companies
+    },
+        { where: { id: primaryKey, owner: userid } }
+    ).then(
+        data => {
+            return data ? res.json(data) : res.send("Not authorized to update row")
+        }),
+        err => res.send(500, err.message)
+  })
+  
+  router.get("/skills", function (req, res) {
+    //grabbing all of the Grocery List items from data
+    //database for a given user
+    var skills = req.body.Seeker.skills
+    Finder.findAll({
+        where: { skills:skills }
+    }).then(
+        function findAllSuccess(data) {
+            res.json(data)
+        }, function findAll(err) {
+            res.send(500, err.message)
+        })
+})
 
 module.exports = router;

@@ -20,5 +20,13 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GregoryJohnAllen/red-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/GregoryJohnAllen/red-server/issues"
+  },
+  "homepage": "https://github.com/GregoryJohnAllen/red-server#readme"
 }
