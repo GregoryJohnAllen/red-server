@@ -5,6 +5,7 @@ var Seeker = sequelize.import("../models/seeker")
 var Finder = sequelize.import ("../models/finder")
 var jwt = require('jsonwebtoken')
 var bcrypt = require('bcryptjs')
+var FinderModel = sequelize.import('../models/finder')
 
 //Controller get, post, delete go below
 //the below get is a test
@@ -13,6 +14,36 @@ router.get("/", function(req, res) {
 });
 
 
+<<<<<<< HEAD
+=======
+
+router.get("/", function (req, res) {
+    //grabbing all of the Grocery List items from data
+    var userid = req.user
+    FinderModel.findAll({
+        where: { }
+    }).then(
+        function findAllSuccess(data) {
+            res.json(data)
+        }, function findAll(err) {
+            res.send(500, err.message)
+        })
+})
+
+//Get All
+router.get('/:id', function (req, res) {
+    var userid = req.user.id
+    FinderModel.findOne({
+        where: { owner: userid }
+    }).then(
+        data => {
+            return res.json(data)
+        }),
+        err => res.send(500, err.message)
+})
+
+
+>>>>>>> origin/tre1
 //  ternary user ? res.json(user): res.send ("User not found in our database");
 router.delete("/delete/:id", function (req, res) {
     var primaryKey = req.params.id
