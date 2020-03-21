@@ -4,7 +4,7 @@ var User = sequelize.import("../models/user");
 
 module.exports = function(req, res, next) {
   if (req.method == "OPTIONS") {   
-    next();
+    next();                                         
   } else {
     var sessionToken = req.headers.authorization;
     console.log(sessionToken);
