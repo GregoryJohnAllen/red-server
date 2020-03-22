@@ -14,8 +14,6 @@ router.get("/", function(req, res) {
 });
 
 
-<<<<<<< HEAD
-=======
 
 router.get("/", function (req, res) {
     //grabbing all of the Grocery List items from data
@@ -43,7 +41,6 @@ router.get('/:id', function (req, res) {
 })
 
 
->>>>>>> origin/tre1
 //  ternary user ? res.json(user): res.send ("User not found in our database");
 router.delete("/delete/:id", function (req, res) {
     var primaryKey = req.params.id
