@@ -61,34 +61,32 @@ router.post("/createuser", function(req, res) {
           var token = jwt.sign({ id: email.id }, process.env.JWT_SECRET, { expiresIn: 60 * 60 * 24 })
           //process.env.JWT_SECRET this is going to allow variables for your server
           res.json({
-              user: email,
+              email: email,
               message: 'created',
               fname: fname,
               lname: lname,
               sessionToken: token
           })
       }, function createError(err) {
-          res.send(500, err.message);
+          res.json(500, err.message);
       })
 })
 
 //logging in a user
 
 router.post("/login", function(req, res) {
-  let user = req.body.user.email;
-  let password = req.body.user.password;
 
   User.findOne({
-    where: { email: user }
-  }).then(user => {
-    if (user) {
-      comparePasswords(user);
+    where: { email: req.body.user.email }
+  }).then(email => {
+    if (email) {
+      comparePasswords(email);
     } else {
       res.send("User not found in our database");
     }
-    function comparePasswords(user) {
-      bcrypt.compare(password, user.password, function matches(err, matches) {
-        matches ? generateToken(user) : res.send("Incorrect password");
+    function comparePasswords(email) {
+      bcrypt.compare(req.body.user.password, email.password, function matches(err, matches) {
+        matches ? generateToken(email) : res.send("Incorrect password");
       });
     }
     //may need to change user.password to user.passwordhash, not sure

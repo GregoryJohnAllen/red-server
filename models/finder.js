@@ -1,7 +1,8 @@
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define('finder', {
-    diskRank: DataTypes.STRING,
-    employType: DataTypes.STRING, //checkbox
+    // owner: DataTypes.INTEGER,
+    diskrank: DataTypes.STRING,
+    employtype: DataTypes.STRING, //checkbox
     about: DataTypes.STRING,
     skills: DataTypes.STRING,
     salary: DataTypes.INTEGER,  //salary slider

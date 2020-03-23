@@ -1,8 +1,8 @@
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define('seeker', {
-    preDiskTraits: DataTypes.STRING,
-    prevJobs: DataTypes.STRING, //checkboxes
-    prefSkills: DataTypes.STRING,
+    predisktraits: DataTypes.STRING,
+    prevjobs: DataTypes.STRING, //checkboxes
+    prefskills: DataTypes.STRING,
     companies: DataTypes.STRING
     //office image
     //STRETCH: api import of company info
