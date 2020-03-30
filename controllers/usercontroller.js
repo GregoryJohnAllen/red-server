@@ -2,43 +2,11 @@ var express = require("express");
 var router = express.Router();
 var sequelize = require("../db");
 var User = sequelize.import("../models/user");
+var Finder = sequelize.import("../models/finder");
+var Seeker = sequelize.import("../models/seeker");
 var bcrypt = require("bcryptjs");
 var jwt = require("jsonwebtoken");
 
-//Controller get, post, delete go below
-//the below get is a test
-// router.get("/", function(req, res) {
-//   res.send("user controller works!");
-// });
-
-//example of user sign up with creating an entry
-// router.post("/usertest", function(req, res) {
-//   var testUser = req.body.user.username;
-//   var pass = req.body.user.password;
-//   var phone = req.body.user.phonenumber;
-
-//   //need to use bcrypt.compare() for signin
-
-//   User.create({
-//     username: testUser,
-//     password: bcrypt.hashSync(pass, 10),
-//     phonenumber: phone
-//   }).then(
-//     function createSuccess(testUser) {
-//       var token = jwt.sign({ id: testUser.id }, process.env.JWT_SECRET, {
-//         expiresIn: 60 * 60 * 24
-//       });
-//       res.json({
-//         username: testUser,
-//         message: "user created",
-//         sessionToken: token
-//       });
-//     },
-//     function createError(err) {
-//       res.json(500, err.message);
-//     }
-//   );
-// });
 
 //create a user endpoint
 router.post("/createuser", function(req, res) {
@@ -47,35 +15,72 @@ router.post("/createuser", function(req, res) {
   var password = req.body.user.password;
   var phone = req.body.user.phone;
   var email = req.body.user.email;
+  var profiletype = req.body.user.profiletype;
 
   User.create({
-    //this is creating a save in the database
     fname: fname,
     lname: lname,
     email: email,
     password: bcrypt.hashSync(password, 10),
-    phone: phone
-  }).then(
-      //res.send('user was created!!!'))
-      function createSuccess(email) {
-          var token = jwt.sign({ id: email.id }, process.env.JWT_SECRET, { expiresIn: 60 * 60 * 24 })
-          //process.env.JWT_SECRET this is going to allow variables for your server
+    phone: phone,
+    profiletype: profiletype
+  });
+  if (profiletype === "finder"){
+      Finder.create({
+        diskrank: null,
+        employtpe: null,
+        about: null,
+        skills: null,
+        salary: null,
+        projects: null
+        //add column for req.user.id for refrence to what user actually owns that profile
+      }).then(
+        function createSuccess(email) {
+          var token = jwt.sign({ id: email.id }, process.env.JWT_SECRET, {
+            expiresIn: 60 * 60 * 24
+          });
           res.json({
+            email: email,
+            message: "created",
+            fname: fname,
+            lname: lname,
+            sessionToken: token,
+            profileType: profiletype
+          });
+        },
+        function createError(err) {
+          res.json(500, err.message);
+        }
+      )}
+      else if (profiletype === 'seeker'){
+        Seeker.create({
+          predisktraits: null,
+          prevjobs: null,
+          prefskills: null,
+          companies: null
+        }).then(
+          function createSuccess(email) {
+            var token = jwt.sign({ id: email.id }, process.env.JWT_SECRET, {
+              expiresIn: 60 * 60 * 24
+            });
+            res.json({
               email: email,
-              message: 'created',
+              message: "created",
               fname: fname,
               lname: lname,
               sessionToken: token
-          })
-      }, function createError(err) {
-          res.json(500, err.message);
-      })
-})
+            });
+          },
+          function createError(err) {
+            res.json(500, err.message);
+          }
+        )}
+    
+});
 
 //logging in a user
 
 router.post("/login", function(req, res) {
-
   User.findOne({
     where: { email: req.body.user.email }
   }).then(email => {
@@ -85,7 +90,10 @@ router.post("/login", function(req, res) {
       res.send("User not found in our database");
     }
     function comparePasswords(email) {
-      bcrypt.compare(req.body.user.password, email.password, function matches(err, matches) {
+      bcrypt.compare(req.body.user.password, email.password, function matches(
+        err,
+        matches
+      ) {
         matches ? generateToken(email) : res.send("Incorrect password");
       });
     }

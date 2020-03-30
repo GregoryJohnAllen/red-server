@@ -4,7 +4,6 @@ module.exports = function (sequelize, DataTypes) {
     prevjobs: DataTypes.STRING, //checkboxes
     prefskills: DataTypes.STRING,
     companies: DataTypes.STRING
-    //office image
-    //STRETCH: api import of company info
+    //add column for userid
   })
 }
