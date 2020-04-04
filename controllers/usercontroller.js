@@ -121,6 +121,26 @@ router.post("/login", function(req, res) {
   });
 });
 
+router.get("/getall", function(req, res) {
+  User.findAll().then(
+    function findAllSuccess(data) {
+      res.json(data);
+    },
+    function findAll(err) {
+      res.send(500, err.message);
+    }
+  );
+})
+
+router.get("/:userid", function(req, res) {
+  User.findOne({
+    where: { id: req.params.userid }
+  }).then(data => {
+    return res.json(data);
+  }),
+    err => res.send(500, err.message);
+});
+
 //  ternary user ? res.json(user): res.send ("User not found in our database");
 
 module.exports = router;

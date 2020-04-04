@@ -55,7 +55,7 @@ router.get("/", function(req, res) { //Tested in Postman
 //GET BY ID
 router.get("/:id", function(req, res) {
   Finder.findOne({
-    where: { owner: userid }
+    where: { id: req.params.id }
   }).then(data => {
     return res.json(data);
   }),

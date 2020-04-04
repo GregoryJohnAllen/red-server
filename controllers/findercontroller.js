@@ -87,9 +87,8 @@ router.put("/update/:id", function(req, res) { //Tested in Postman
 });
 
 router.get('/:id', function (req, res) {
-  var userid = req.user.id
   Seeker.findOne({
-      where: { owner: userid }
+      where: { id: req.params.id }
   }).then(
       data => {
           return res.json(data)
