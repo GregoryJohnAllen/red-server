@@ -3,7 +3,7 @@ module.exports = function (sequelize, DataTypes) {
     predisktraits: DataTypes.STRING,
     prevjobs: DataTypes.STRING, //checkboxes
     prefskills: DataTypes.STRING,
-    companies: DataTypes.STRING
-    //add column for userid
+    companies: DataTypes.STRING,
+    userid: DataTypes.INTEGER
   })
 }

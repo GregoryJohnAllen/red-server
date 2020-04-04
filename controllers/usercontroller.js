@@ -16,6 +16,9 @@ router.post("/createuser", function(req, res) {
   var phone = req.body.user.phone;
   var email = req.body.user.email;
   var profiletype = req.body.user.profiletype;
+  //add var = userId so it can be refrenced in line 28
+  var userid ;
+  var token ;
 
   User.create({
     fname: fname,
@@ -24,7 +27,14 @@ router.post("/createuser", function(req, res) {
     password: bcrypt.hashSync(password, 10),
     phone: phone,
     profiletype: profiletype
-  });
+  }) 
+  .then (function userTable(response){
+    userid = response.id
+    console.log(response)
+    token = jwt.sign({ id: userid }, process.env.JWT_SECRET, {
+      expiresIn: 60 * 60 * 24
+    })
+  
   if (profiletype === "finder"){
       Finder.create({
         diskrank: null,
@@ -32,20 +42,18 @@ router.post("/createuser", function(req, res) {
         about: null,
         skills: null,
         salary: null,
-        projects: null
-        //add column for req.user.id for refrence to what user actually owns that profile
+        projects: null,
+        userid: userid
       }).then(
-        function createSuccess(email) {
-          var token = jwt.sign({ id: email.id }, process.env.JWT_SECRET, {
-            expiresIn: 60 * 60 * 24
-          });
+        function createSuccess(response) {
           res.json({
-            email: email,
+            userid: userid,
             message: "created",
             fname: fname,
             lname: lname,
             sessionToken: token,
-            profileType: profiletype
+            profileType: profiletype,
+            data: response
           });
         },
         function createError(err) {
@@ -57,25 +65,25 @@ router.post("/createuser", function(req, res) {
           predisktraits: null,
           prevjobs: null,
           prefskills: null,
-          companies: null
+          companies: null,
+          userid: userid
         }).then(
-          function createSuccess(email) {
-            var token = jwt.sign({ id: email.id }, process.env.JWT_SECRET, {
-              expiresIn: 60 * 60 * 24
-            });
+          function createSuccess(response) {
             res.json({
-              email: email,
+              userid: userid,
               message: "created",
               fname: fname,
               lname: lname,
-              sessionToken: token
+              sessionToken: token,
+              profileType: profiletype,
+              data: response
             });
           },
           function createError(err) {
             res.json(500, err.message);
           }
         )}
-    
+        })
 });
 
 //logging in a user
