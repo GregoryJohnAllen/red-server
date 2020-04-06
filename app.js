@@ -19,6 +19,7 @@ app.use("/test", function(req, res) {
 //EXPOSED ROUTES GO BELOW
 
 app.use("/user", user);
+app.use("/uploads", express.static("uploads"));
 
 //PROTECTED ROUTES WITH AUTH GO BELOW
 app.use(require('./middleware/validate-session'))

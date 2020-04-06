@@ -5,6 +5,7 @@ var User = sequelize.import("../models/user");
 var bcrypt = require("bcryptjs");
 var jwt = require("jsonwebtoken");
 
+
 //Controller get, post, delete go below
 //the below get is a test
 // router.get("/", function(req, res) {

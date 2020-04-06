@@ -3,24 +3,38 @@ var router = express.Router();
 var sequelize = require("../db")
 var Finder = sequelize.import("../models/finder")
 var Seeker = sequelize.import("../models/seeker")
+var multer =  require ("multer")
 
-router.post("/create", function(req, res) { //Tested in Postman
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads')
+  },
+  filename: function (req, file, cb) {
+    cb(null, `FS${Date.now()}${file.originalname.replace(/\s/g, '')}`)
+  }
+})
+var upload = multer({ storage: storage })
+
+
+router.post("/create", upload.single("file"), function(req, res) { //Tested in Postman
   // var owner = req.user.id;
-  var diskRank = req.body.finder.diskrank
-  var employType = req.body.finder.employtype
+  var diskrank = req.body.finder.diskrank
+  var employtype = req.body.finder.employtype
   var about = req.body.finder.about
   var skills = req.body.finder.skills
   var salary = req.body.finder.salary
   var projects = req.body.finder.projects
+  let file=req.file
 
   Finder.create({
     // owner: owner,
-    diskrank: diskRank,
-    employtype: employType,
+    diskrank: diskrank,
+    employtype: employtype,
     about: about,
     skills: skills,
     salary: salary,
-    projects: projects
+    projects: projects,
+    photourl:file.filename
   }).then (
     function createSuccess(
       // owner,
@@ -29,7 +43,8 @@ router.post("/create", function(req, res) { //Tested in Postman
       about,
       skills,
       salary,
-      projects
+      projects,
+      file
     ) {
       res.json({
         // owner: owner,
@@ -38,7 +53,8 @@ router.post("/create", function(req, res) { //Tested in Postman
         about: about,
         skills: skills,
         salary: salary,
-        projects: projects
+        projects: projects,
+        photourl:file.filename
       })
     },
     function createError(err) {
@@ -60,23 +76,26 @@ router.get("/", function (req, res) { //Tested in Postman
 router.put("/update/:id", function(req, res) { //Tested in Postman
   // var userid = req.user.id; add back this line for authorization later
   var primaryKey = req.params.id;
-  var diskRank = req.body.finder.diskrank
-  var employType = req.body.finder.employtype
+  var diskrank = req.body.finder.diskrank
+  var employtype = req.body.finder.employtype
   var about = req.body.finder.about
   var skills = req.body.finder.skills
   var salary = req.body.finder.salary
   var projects = req.body.finder.projects
+  let file=req.file
+
 
 // insert model variables
 
   Finder.update(
   {
-    diskrank: diskRank,
-    employtype: employType,
+    diskrank: diskrank,
+    employtype: employtype,
     about: about,
     skills: skills,
     salary: salary,
-    projects: projects
+    projects: projects,
+    photourl:file.filename
   },
       { where: { id: primaryKey } } 
       // , owner: userid took out this line from above line add back for authorization
@@ -96,4 +115,7 @@ router.get('/:id', function (req, res) {
       }),
       err => res.send(500, err.message)
 })
+
+
+
 module.exports = router;
