@@ -19,13 +19,10 @@ app.use("/test", function(req, res) {
 //EXPOSED ROUTES GO BELOW
 
 app.use("/user", user);
-<<<<<<< HEAD
 app.use("/finder", finder);
 app.use("/seeker", seeker);
-=======
 app.use("/uploads", express.static("uploads"));
 
->>>>>>> origin/marina2
 //PROTECTED ROUTES WITH AUTH GO BELOW
 app.use(require('./middleware/validate-session'))
 
