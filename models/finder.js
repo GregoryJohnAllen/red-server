@@ -6,6 +6,8 @@ module.exports = function (sequelize, DataTypes) {
     skills: DataTypes.STRING,
     salary: DataTypes.INTEGER,  //salary slider
     projects: DataTypes.STRING,
-    userid: DataTypes.INTEGER
+    userid: DataTypes.INTEGER,
+    photourl: DataTypes.STRING
+    //STRETCH:resumes and projects 
   })
 }

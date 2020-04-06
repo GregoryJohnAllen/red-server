@@ -3,35 +3,50 @@ var router = express.Router();
 var sequelize = require("../db");
 var Seeker = sequelize.import("../models/seeker");
 var Finder = sequelize.import("../models/finder");
-var jwt = require("jsonwebtoken");
-var bcrypt = require("bcryptjs");
+var multer =  require ("multer")
+
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads')
+  },
+  filename: function (req, file, cb) {
+    cb(null, `FS${Date.now()}${file.originalname.replace(/\s/g, '')}`)
+  }
+})
+var upload = multer({ storage: storage })
+
 
 //CREATE SEEKER
-router.post("/create", function(req, res) {
-    var preDiskTraits = req.body.seeker.predisktraits
-    var prevJobs = req.body.seeker.prevjobs
-    var prefSkills = req.body.seeker.prefskills
+router.post("/create", upload.single("file"),function(req, res) {
+    var predisktraits = req.body.seeker.predisktraits
+    var prevjobs = req.body.seeker.prevjobs
+    var prefskills = req.body.seeker.prefskills
     var companies = req.body.seeker.companies
+    let file=req.file
+
 
     Seeker.create({
-        predisktraits: preDiskTraits,
-        prevjobs: prevJobs,
-        prefskills: prefSkills,
-        companies: companies
+        predisktraits: predisktraits,
+        prevjobs: prevjobs,
+        prefskills: prefskills,
+        companies: companies,
+        photourl:file.filename
     }).then(
     function createSuccess(
       // owner,
         predisktraits,
         prevjobs,
         prefskills,
-        companies
+        companies,
+        file
     ) {
         res.json({
         // owner: owner,
         predisktraits: predisktraits,
         prevjobs: prevjobs,
         prefskills: prefskills,
-        companies: companies
+        companies: companies,
+        photourl:file.filename
         });
     },
     function createError(err) {
@@ -77,20 +92,23 @@ router.delete("/delete/:id", function(req, res) {
 router.put("/update/:id", function(req, res) {
     // var userid = req.user.id; add back this line for authorization later
     var primaryKey = req.params.id;
-    var preDiskTraits = req.body.seeker.predisktraits;
-    var prevJobs = req.body.seeker.prevjobs;
-    var prefSkills = req.body.seeker.prefskills;
+    var predisktraits = req.body.seeker.predisktraits;
+    var prevjobs = req.body.seeker.prevjobs;
+    var prefskills = req.body.seeker.prefskills;
     var companies = req.body.seeker.companies;
+    let file=req.file
+
 
   // insert model variables
 
     Seeker.update(
     {
-        predisktraits: preDiskTraits,
-        prevjobs: prevJobs,
-        prefskills: prefSkills,
-        companies: companies
-    },
+        predisktraits: predisktraits,
+        prevjobs: prevjobs,
+        prefskills: prefskills,
+        companies: companies,
+        photourl:file.filename
+      },
         { where: { id: primaryKey } } 
         // , owner: userid took out this lube from above line add back for authorization
     ).then(data => {
