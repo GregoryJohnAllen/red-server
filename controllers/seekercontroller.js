@@ -90,7 +90,7 @@ router.delete("/delete/:id", function(req, res) {
 });
 
 router.put("/update/:id", function(req, res) {
-    // var userid = req.user.id; add back this line for authorization later
+    var userid = req.user.id;
     var primaryKey = req.params.id;
     var predisktraits = req.body.seeker.predisktraits;
     var prevjobs = req.body.seeker.prevjobs;
@@ -109,7 +109,7 @@ router.put("/update/:id", function(req, res) {
         companies: companies,
         photourl:file.filename
       },
-        { where: { id: primaryKey } } 
+        { where: { id: primaryKey, owner: userid } } 
         // , owner: userid took out this lube from above line add back for authorization
     ).then(data => {
         return data ? res.json(data) : res.send("Not authorized to update row");

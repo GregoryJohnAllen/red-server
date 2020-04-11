@@ -28,6 +28,6 @@ app.use("/finder", finder);
 app.use("/seeker", seeker);
 
 
-app.listen(3000, function() {
-  console.log("App is now listening on 3000");
+app.listen(process.env.PORT, function() {
+  console.log(`App is now listening on ${process.env.PORT}`);
 });
