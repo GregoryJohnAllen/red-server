@@ -21,7 +21,7 @@
     "sequelize": "^4.44.4"
   },
   "devDependencies": {
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.3"
   },
   "repository": {
     "type": "git",

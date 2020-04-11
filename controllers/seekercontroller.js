@@ -118,8 +118,6 @@ router.put("/update/:id", function(req, res) {
 });
 
 router.get("/skills", function(req, res) {
-  //grabbing all of the Grocery List items from data
-  //database for a given user
   var skills = req.body.Seeker.skills;
   Finder.findAll({
     where: { skills: skills }

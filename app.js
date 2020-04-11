@@ -19,13 +19,13 @@ app.use("/test", function(req, res) {
 //EXPOSED ROUTES GO BELOW
 
 app.use("/user", user);
-app.use("/finder", finder);
-app.use("/seeker", seeker);
+
 app.use("/uploads", express.static("uploads"));
 
 //PROTECTED ROUTES WITH AUTH GO BELOW
 app.use(require('./middleware/validate-session'))
-
+app.use("/finder", finder);
+app.use("/seeker", seeker);
 
 
 app.listen(3000, function() {
