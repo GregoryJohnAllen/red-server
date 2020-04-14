@@ -73,16 +73,16 @@ router.get("/", function (req, res) { //Tested in Postman
       })
 })
 
-router.put("/update/:id", function(req, res) { //Tested in Postman
+router.put("/update/", function(req, res) { //Tested in Postman
   // var userid = req.user.id; add back this line for authorization later
-  var primaryKey = req.params.id;
+  // var primaryKey = req.params.id;
   var diskrank = req.body.finder.diskrank
   var employtype = req.body.finder.employtype
   var about = req.body.finder.about
   var skills = req.body.finder.skills
   var salary = req.body.finder.salary
   var projects = req.body.finder.projects
-  let file=req.file
+  // let file=file
 
 
 // insert model variables
@@ -94,10 +94,10 @@ router.put("/update/:id", function(req, res) { //Tested in Postman
     about: about,
     skills: skills,
     salary: salary,
-    projects: projects,
-    photourl:file.filename
+    projects: projects
+    // photourl:file.filename
   },
-      { where: { id: primaryKey } } 
+      { where: { userid: req.user.id } } 
       // , owner: userid took out this line from above line add back for authorization
   ).then(data => {
       return data ? res.json(data) : res.send("Not authorized to update row");
@@ -105,9 +105,9 @@ router.put("/update/:id", function(req, res) { //Tested in Postman
   err => res.send(500, err.message);
 });
 
-router.get('/:id', function (req, res) {
+router.get('/getprofile', function (req, res) {
   Seeker.findOne({
-      where: { id: req.params.id }
+      where: { user: req.user.id }
   }).then(
       data => {
           return res.json(data)

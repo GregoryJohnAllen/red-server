@@ -68,9 +68,9 @@ router.get("/", function(req, res) { //Tested in Postman
 });
 
 //GET BY ID
-router.get("/:id", function(req, res) {
+router.get("/getprofile", function(req, res) {
   Finder.findOne({
-    where: { id: req.params.id }
+    where: { userid: req.user.id }
   }).then(data => {
     return res.json(data);
   }),
@@ -89,14 +89,13 @@ router.delete("/delete/:id", function(req, res) {
     err => res.send(500, err.message);
 });
 
-router.put("/update/:id", function(req, res) {
-    var userid = req.user.id;
-    var primaryKey = req.params.id;
+router.put("/update/", function(req, res) {
+    // var primaryKey = req.params.id;
     var predisktraits = req.body.seeker.predisktraits;
     var prevjobs = req.body.seeker.prevjobs;
     var prefskills = req.body.seeker.prefskills;
     var companies = req.body.seeker.companies;
-    let file=req.file
+    // let file=req.file
 
 
   // insert model variables
@@ -107,9 +106,9 @@ router.put("/update/:id", function(req, res) {
         prevjobs: prevjobs,
         prefskills: prefskills,
         companies: companies,
-        photourl:file.filename
+        // photourl:file.filename
       },
-        { where: { id: primaryKey, owner: userid } } 
+        { where: { userid: req.user.id } } 
         // , owner: userid took out this lube from above line add back for authorization
     ).then(data => {
         return data ? res.json(data) : res.send("Not authorized to update row");
