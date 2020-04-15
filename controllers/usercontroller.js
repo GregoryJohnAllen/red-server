@@ -132,9 +132,9 @@ router.get("/getall", function(req, res) {
   );
 })
 
-router.get("/:userid", function(req, res) {
+router.get("/getmyprofile/:id", function(req, res) {
   User.findOne({
-    where: { id: req.params.userid }
+    where: { id:req.params.id }
   }).then(data => {
     return res.json(data);
   }),
