@@ -132,9 +132,15 @@ router.get("/getall", function(req, res) {
   );
 })
 
+<<<<<<< HEAD
 router.get("/getmyprofile", function(req, res) {
   User.findOne({
     where: { id: req.user.id }
+=======
+router.get("/getmyprofile/:id", function(req, res) {
+  User.findOne({
+    where: { id:req.params.id }
+>>>>>>> origin/marina5
   }).then(data => {
     return res.json(data);
   }),
