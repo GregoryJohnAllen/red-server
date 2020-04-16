@@ -115,7 +115,7 @@ router.post("/login", function(req, res) {
       res.json({
         user: user,
         message: "created",
-        sessionToken: token
+        sessionToken: token,
       });
     }
   });

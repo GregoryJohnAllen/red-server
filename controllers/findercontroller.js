@@ -107,7 +107,7 @@ router.put("/update/", function(req, res) { //Tested in Postman
 
 router.get('/getprofile', function (req, res) {
   Seeker.findOne({
-      where: { user: req.user.id }
+      where: { userid: req.user.id }
   }).then(
       data => {
           return res.json(data)
